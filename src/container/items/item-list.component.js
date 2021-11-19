@@ -6,6 +6,8 @@ import {AiOutlineSearch} from "react-icons/ai"
 import { FaSortUp,FaSortDown } from "react-icons/fa";
 import { updateItem } from "../../services/item/item.update";
 
+import ItemService from "../../services/item/item.service";
+
 const ItemList = () => {
 
     const [items, setItems] = useState([]);
@@ -29,7 +31,7 @@ const ItemList = () => {
 
 
     useEffect( async () => {
-        const resultAPI = await getItems(params.keyword, params.currentPage, params.pageSize,params.sortBy);
+        const resultAPI = await ItemService.getItems(params.keyword, params.currentPage, params.pageSize,params.sortBy);
         setItems([...resultAPI.data.content]);
         setTotalItems(resultAPI.data.totalElements);
     }, [])
@@ -42,21 +44,21 @@ const ItemList = () => {
     async function handleSort(sortBy){
         const newParam = {...params, sortBy:sortBy }
         setParams(newParam);
-        const resultAPI = await getItems(params.keyword, params.currentPage, params.pageSize,params.sortBy);
+        const resultAPI = await ItemService.getItems(params.keyword, params.currentPage, params.pageSize,params.sortBy);
         setItems([...resultAPI.data.content]);
         setTotalItems(resultAPI.data.totalElements);
     }
 
     const submit = async (event) => {
         event.preventDefault();
-        const resultAPI = await getItems(params.keyword, params.currentPage, params.pageSize,params.sortBy);
+        const resultAPI = await ItemService.getItems(params.keyword, params.currentPage, params.pageSize,params.sortBy);
         setItems([...resultAPI.data.content]);
         setTotalItems(resultAPI.data.totalElements)
     }
 
     const handlePaginate = async (currentPage, pageSize) => {
         console.log(currentPage, pageSize)
-        const resultAPI = await getItems(params.keyword, currentPage, pageSize,params.sortBy)
+        const resultAPI = await ItemService.getItems(params.keyword, currentPage, pageSize,params.sortBy)
         setParams({...params, currentPage: currentPage, pageSize: pageSize})
         setItems([...resultAPI.data.content])
         setTotalItems(resultAPI.data.totalElements)
@@ -76,8 +78,8 @@ const ItemList = () => {
 
     const update = async (event)=>{
         event.preventDefault();
-        await updateItem(itemUpdate.id,itemUpdate);
-        const resultAPI = await getItems(params.keyword, params.currentPage, params.pageSize,params.sortBy);
+        await ItemService.updateItem(itemUpdate.id,itemUpdate);
+        const resultAPI = await ItemService.getItems(params.keyword, params.currentPage, params.pageSize,params.sortBy);
         console.log(resultAPI);
         setItems([...resultAPI.data.content]);
         setTotalItems(resultAPI.data.totalElements)
