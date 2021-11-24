@@ -1,3 +1,5 @@
+
+
 import React, { useEffect, useState } from "react";
 import { Button,Modal,ModalFooter,ModalHeader,ModalBody, Form, Input, Row, Col,Table, Container, InputGroup, ButtonGroup,Label,FormGroup,FormText } from "reactstrap";
 import { Pagination } from "antd"
@@ -5,9 +7,9 @@ import { FaSortUp,FaSortDown } from "react-icons/fa";
 import ItemService from "../../services/item/item.service";
 import AuthService from "../../services/item/auth.service";
 
-const ItemList = () => {
+const OrderList = () => {
 
-    const [items, setItems] = useState([]);
+    const [orders, setOrders] = useState([]);
     const [params, setParams] = useState({
         keyword: "",
         currentPage: 1,
@@ -15,8 +17,6 @@ const ItemList = () => {
         sortBy:"createdAt:desc"
     });
     const [totalItems, setTotalItems] = useState(0);
-
-    const[idModal,setIdModal] =useState("");
 
     const [itemUpdate, setItemUpdate] = useState({
         id:"",
@@ -26,10 +26,6 @@ const ItemList = () => {
         imageUrl:""
     });
 
-    const [show,setShow]= useState({
-        canModify:false,
-        currentUser:undefined
-    });
 
     useEffect( async () => {
         const resultAPI = await ItemService.getItems(params.keyword, params.currentPage, params.pageSize,params.sortBy);
@@ -147,61 +143,7 @@ const ItemList = () => {
                                 <td>{item.name}</td>
                                 <td>{item.description}</td>
                                 <td>{item.createdAt}</td>
-                                <td>{item.price}{"$"}</td>
-                                <td>
-                                    <img src={item.imageUrl} width={150} height={150}></img>
-                                </td>
-                                {show.canModify&&(
-                                    <td>
-                                    <ButtonGroup className="mt-5">
-                                        <Button color="warning" onClick={()=>toggleModal(item)}>Update</Button>{' '}
-                                        <Button color="danger" onClick={()=>deleteItem(item.id)}>Delete</Button>
-                                    </ButtonGroup>
-                                    <div>
-                                        <Modal isOpen={idModal === item.id} fullscreen="lg" toggle={()=>toggleModal(-1)} fade={false}>
-                                            <ModalHeader toggle={()=>toggleModal(-1)}>Update Item</ModalHeader>
-                                            <ModalBody>
-                                                <Form onSubmit={update}>
-                                                    <FormGroup row>
-                                                        <Label for="name" sm={2}> Item Id</Label>
-                                                        <Col sm={10}>
-                                                            <Input id="id" name="id"  type="text" value={itemUpdate.id} onChange={handleInputChange}/>
-                                                        </Col>
-                                                    </FormGroup>
-                                                    <FormGroup row>
-                                                        <Label for="name" sm={2}>Item Name</Label>
-                                                        <Col sm={10}>
-                                                            <Input id="name" name="name"  type="text" value={itemUpdate.name} onChange={handleInputChange}/>
-                                                        </Col>
-                                                    </FormGroup>
-                                                    <FormGroup row>
-                                                        <Label for="description" sm={2}>Description</Label>
-                                                        <Col sm={10}>
-                                                            <Input id="description" name="description" type="textarea" value={itemUpdate.description} onChange={handleInputChange}/>
-                                                        </Col>
-                                                    </FormGroup> 
-                                                    <FormGroup row>
-                                                        <Label for="price" sm={2}>Price</Label>
-                                                        <Col sm={10}>
-                                                            <Input id="price" name="price" value={itemUpdate.price} onChange={handleInputChange}/>
-                                                        </Col>
-                                                    </FormGroup> 
-                                                    <FormGroup row>
-                                                        <Label for="imageUrl" sm={2}>ImageUrl</Label>
-                                                        <Col sm={10}>
-                                                            <Input id="imageUrl" name="imageUrl" type="textarea" value={itemUpdate.imageUrl} onChange={handleInputChange}/>
-                                                        </Col>
-                                                    </FormGroup> 
-                                                    <FormGroup>
-                                                        <Button type="submit">Update</Button>
-                                                    </FormGroup>
-                                                </Form>
-                                            </ModalBody>
-                                        </Modal>
-                                        </div>
-                                </td>
-                                )}
-                                  
+                                <td>{item.price}{"$"}</td>     
                             </tr>
                         )
                         )}
@@ -224,4 +166,4 @@ const ItemList = () => {
     );
 }
 
-export default ItemList;
+export default OrderList;

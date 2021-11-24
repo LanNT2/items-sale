@@ -1,4 +1,4 @@
-import http from "../../http-common";
+import http from "../../http-common-items";
 import authHeader from './auth-header';
 class ItemService{
     async getItem(id) {
