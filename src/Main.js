@@ -12,8 +12,10 @@ import LogOut from './container/items/logout.component';
 import Profile from './container/user/profile.component';
 import ChangePassword from './container/user/change-password.component';
 import ProfileImageUpload from './container/user/profile-image-upload.component'; 
+import Cart from './container/user/cart.component';
 import UserService from './services/item/user.service';
 import ProfileImage from './container/user/avatar.component';
+import { useSelector, useDispatch } from "react-redux";
 const { SubMenu } = Menu;
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -22,18 +24,24 @@ const Main =() =>{
 
     console.log(currentUser);
 
+    const counter = useSelector((state) => state.counter);
+    console.log(counter);
+
+    const ItemCount = UserService.getItemCountInCart();
+
+    console.log(ItemCount);
     return(
         <Layout>
       <Router>
         <Header className="header">
           <div className="logo" />
-          <Menu  theme="dark" mode="horizontal"  style={{ padding: '0 1000px' }}>
+          <Menu  theme="dark" mode="horizontal"  style={{ padding: '0 1300px' }}>
             <Menu.Item key="6" icon={<ShoppingCartOutlined style={{fontSize:"20px"}}/>}>
-              <Link>Cart</Link>
+              <Link to="/cart">Cart {ItemCount}</Link>
             </Menu.Item>
             {(currentUser!=null)?(
               <Menu.Item>
-                <Avatar className="pl-2" src={<Image src={ "http://localhost:8080/users/profile-image/view/"+ currentUser.id} style={{ width: 32 }}/>} />
+                <Avatar className="pl-2" src={<Image alt="preview image" src={ "http://localhost:8080/users/profile-image/view/"+ currentUser.id} style={{ width: 32 }}/>} />
               </Menu.Item>
             ):(
               <Menu.Item><Link to="/login">Login</Link></Menu.Item>
@@ -91,6 +99,9 @@ const Main =() =>{
               </Route>
               <Route path="/profile-image/add">
                 <ProfileImageUpload/>
+              </Route>
+              <Route path ="/cart">
+                <Cart />
               </Route>
             </Switch>
             </Content>

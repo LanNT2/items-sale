@@ -27,9 +27,19 @@ class UserService {
       headers: authHeader(),
     })
   }
-  addItemToCart(itemId,userId){
-    return http.post(`/cart/add/${userId}`,{params:{itemId:itemId}},{ headers: authHeader() })
+  addItemToCart(userId,itemId){
+    console.log(authHeader());
+    console.log(itemId)
+    return http.post(`/cart/add/${userId}`,itemId,{headers: authHeader()})
   }
+
+  getItemsInCart(userId){
+    return http.get(`/cart/items/${userId}`, { headers: authHeader() });
+  }
+  getItemCountInCart(){
+    const itemCount =localStorage.getItem('cartCounter');
+    return itemCount;
+   }
 }
 
 

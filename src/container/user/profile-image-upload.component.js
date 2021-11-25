@@ -27,7 +27,7 @@ const ProfileImageUpload =() =>{
         let data = new FormData();
         data.append('image', profileImg.image);
         const resultAPI = await (userService.addProfileImage(currentUser.id,data));
-        console.log(resultAPI);
+        window.location.reload();
     }
     const onFinishFailed = (errorInfo) => {
         console.log('Failed:', errorInfo);

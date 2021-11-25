@@ -5,6 +5,8 @@ import { FaSortUp,FaSortDown } from "react-icons/fa";
 import ItemService from "../../services/item/item.service";
 import AuthService from "../../services/item/auth.service";
 import UserService from "../../services/item/user.service";
+import { useSelector, useDispatch } from "react-redux";
+import { increment } from "../../action/cart-counter";
 
 const ItemList = () => {
 
@@ -15,6 +17,7 @@ const ItemList = () => {
         pageSize: 5,
         sortBy:"createdAt:desc"
     });
+
     const [totalItems, setTotalItems] = useState(0);
 
     const[idModal,setIdModal] =useState("");
@@ -30,7 +33,7 @@ const ItemList = () => {
     const [show,setShow]= useState({
         canModify:false,
         canAddToCart:false,
-        currentUser:undefined
+        currentUser:null
     });
 
     const[message,setMessage]=useState({
@@ -111,22 +114,33 @@ const ItemList = () => {
         window.location.reload();
     }
 
-    const addItemToCart = async (userId,itemId) =>{
-        try{
-            await UserService.addItemToCart(userId,itemId);
-            setMessage({
-                isError:false,
-                isSuccess:true,
-                content:"Add success!"
-            });
-        }catch(error){
-            console.log(error);
-            setMessage({
-                isError:true,
-                isSuccess:false,
-                content:"Something wrong!"
-            });
-        }
+    // const addItemToCart = async (itemId) =>{
+    //     try{
+    //         const currentUser = show.currentUser;
+    //         const resultAPI = await UserService.addItemToCart(currentUser.id,itemId);
+    //         console.log(resultAPI);
+    //         setMessage({
+    //             isError:false,
+    //             isSuccess:true,
+    //             content:"Add success!"
+    //         });
+    //     }catch(error){
+    //         console.log(error);
+    //         setMessage({
+    //             isError:true,
+    //             isSuccess:false,
+    //             content:"Something wrong!"
+    //         });
+    //     }
+    // }
+
+    const counter = useSelector((state) => state.counter);
+    console.log(counter);
+    const dispatch = useDispatch();
+
+    const addItemToCart = ()=>{
+        dispatch(increment(1));
+        localStorage.setItem("cartCounter",counter);
     }
 
     return (
@@ -234,7 +248,7 @@ const ItemList = () => {
 
                                 {show.canAddToCart&&(
                                     <td>
-                                        <Button className="mt-5" color="primary" onClick={addItemToCart}>Add To Cart</Button>
+                                        <Button className="mt-5" color="primary"  onClick={() => addItemToCart()} >Add To Cart</Button>
                                     </td>
                                 )}
                                   
