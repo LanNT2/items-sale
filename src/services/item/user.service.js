@@ -27,6 +27,9 @@ class UserService {
       headers: authHeader(),
     })
   }
+  addItemToCart(itemId,userId){
+    return http.post(`/cart/add/${userId}`,{params:{itemId:itemId}},{ headers: authHeader() })
+  }
 }
 
 

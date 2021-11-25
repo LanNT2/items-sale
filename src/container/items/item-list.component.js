@@ -4,6 +4,7 @@ import { Pagination } from "antd"
 import { FaSortUp,FaSortDown } from "react-icons/fa";
 import ItemService from "../../services/item/item.service";
 import AuthService from "../../services/item/auth.service";
+import UserService from "../../services/item/user.service";
 
 const ItemList = () => {
 
@@ -28,7 +29,14 @@ const ItemList = () => {
 
     const [show,setShow]= useState({
         canModify:false,
+        canAddToCart:false,
         currentUser:undefined
+    });
+
+    const[message,setMessage]=useState({
+        isError:false,
+        isSuccess:false,
+        content:""
     });
 
     useEffect( async () => {
@@ -43,7 +51,8 @@ const ItemList = () => {
             setShow(
                 {
                     currentUser: user,
-                    canModify: user.roles.includes("ROLE_ADMIN")
+                    canModify: user.roles.includes("ROLE_ADMIN"),
+                    canAddToCart:user.roles.includes("ROLE_USER")
                 }
             )
         }
@@ -102,6 +111,24 @@ const ItemList = () => {
         window.location.reload();
     }
 
+    const addItemToCart = async (userId,itemId) =>{
+        try{
+            await UserService.addItemToCart(userId,itemId);
+            setMessage({
+                isError:false,
+                isSuccess:true,
+                content:"Add success!"
+            });
+        }catch(error){
+            console.log(error);
+            setMessage({
+                isError:true,
+                isSuccess:false,
+                content:"Something wrong!"
+            });
+        }
+    }
+
     return (
         <React.Fragment>
             <Container>
@@ -136,6 +163,9 @@ const ItemList = () => {
                             </th>
                             <th>Image</th>
                             {show.canModify&&(
+                                <th>Action</th>
+                            )}
+                            {show.canAddToCart&&(
                                 <th>Action</th>
                             )}   
                         </tr>
@@ -200,6 +230,12 @@ const ItemList = () => {
                                         </Modal>
                                         </div>
                                 </td>
+                                )}
+
+                                {show.canAddToCart&&(
+                                    <td>
+                                        <Button className="mt-5" color="primary" onClick={addItemToCart}>Add To Cart</Button>
+                                    </td>
                                 )}
                                   
                             </tr>
